@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ajitp\\Csharp\\PicoGK Example\\PicoGK Example.csproj",
+      "projectUniqueName": "C:\\Users\\ajitp\\impeller\\CsharpDesign\\PicoGK Example.csproj",
       "projectName": "PicoGK Example",
-      "projectPath": "C:\\Users\\ajitp\\Csharp\\PicoGK Example\\PicoGK Example.csproj",
+      "projectPath": "C:\\Users\\ajitp\\impeller\\CsharpDesign\\PicoGK Example.csproj",
       "packagesPath": "C:\\Users\\ajitp\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ajitp\\Csharp\\PicoGK Example\\obj\\",
+      "outputPath": "C:\\Users\\ajitp\\impeller\\CsharpDesign\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ajitp\\AppData\\Roaming\\NuGet\\NuGet.Config"

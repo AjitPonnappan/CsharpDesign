@@ -1,7 +1,8 @@
 ﻿
 try
 {
-	PicoGK.Library.Go(0.5f, test.App.run);
+
+	PicoGK.Library.Go(0.5f,test.App.geometry);
 }
 
 catch (Exception e)

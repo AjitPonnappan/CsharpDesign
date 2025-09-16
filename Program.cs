@@ -1,8 +1,7 @@
 ﻿
 try
 {
-	//First steps to creating impeller geometry
-	PicoGK.Library.Go(0.5f,test.App.geometry);
+	PicoGK.Library.Go(0.4f,HeatExchanger.Demo.Run);
 }
 
 catch (Exception e)

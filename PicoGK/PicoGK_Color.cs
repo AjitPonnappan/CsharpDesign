@@ -6,7 +6,7 @@
 //
 // For more information, please visit https://picogk.org
 // 
-// PicoGK is developed and maintained by LEAP 71 - © 2023-2024 by LEAP 71
+// PicoGK is developed and maintained by LEAP 71 - © 2023-2025 by LEAP 71
 // https://leap71.com
 //
 // Computational Engineering will profoundly change our physical world in the
@@ -207,6 +207,12 @@ namespace PicoGK
                 strResult += $"{clr.A:x2}";
 
             return strResult;
+        }
+
+        public string strAsABGRHexCode()
+        {
+            ColorRgba32 clr = this;
+            return $"{clr.A:x2}{clr.B:x2}{clr.G:x2}{clr.R:x2}";
         }
 
         public override string ToString()

@@ -6,7 +6,7 @@
 //
 // For more information, please visit https://picogk.org
 // 
-// PicoGK is developed and maintained by LEAP 71 - © 2023-2024 by LEAP 71
+// PicoGK is developed and maintained by LEAP 71 - © 2023-2025 by LEAP 71
 // https://leap71.com
 //
 // Computational Engineering will profoundly change our physical world in the
@@ -122,9 +122,9 @@ namespace PicoGK
 
                         for (int nPass = 0; nPass < 3; nPass++)
                         {
-                            for (int nPolyline = 0; nPolyline < oSlice.nCountours(); nPolyline++)
+                            for (int nPolyline = 0; nPolyline < oSlice.nContours(); nPolyline++)
                             {
-                                PolyContour oPoly = oSlice.oCountourAt(nPolyline);
+                                PolyContour oPoly = oSlice.oContourAt(nPolyline);
 
                                 if ((nPass == 0) && (oPoly.eWinding() != PolyContour.EWinding.COUNTERCLOCKWISE))
                                 {

@@ -6,7 +6,7 @@
 //
 // For more information, please visit https://picogk.org
 // 
-// PicoGK is developed and maintained by LEAP 71 - © 2023-2024 by LEAP 71
+// PicoGK is developed and maintained by LEAP 71 - © 2023-2025 by LEAP 71
 // https://leap71.com
 //
 // Computational Engineering will profoundly change our physical world in the
@@ -55,6 +55,20 @@ namespace PicoGK
         /// Positive values indicate the outside of the object
         /// </returns>
         public abstract float fSignedDistance(in Vector3 vec);
+    }
+
+    /// <summary>
+    /// Interface for a bounded implicit function. Like IImplicit, but
+    /// allows querying the bounding box of the function. Use when the
+    /// implicit defines a shape that has bounds (say, a sphere), vs.
+    /// an unbounded function (a gyroid)
+    /// </summary>
+    public interface IBoundedImplicit : IImplicit
+    {
+        /// <summary>
+        /// Access the bounding box of the implicit function
+        /// </summary>
+        BBox3 oBounds {get;}
     }
 
     public partial class Voxels
@@ -116,6 +130,16 @@ namespace PicoGK
                         in BBox3 oBounds) : this()
         {
             RenderImplicit(xImplicit, oBounds);
+        }
+
+        /// <summary>
+        /// Creates a new voxel field and renders it using the
+        /// bounded implicit function specified
+        /// </summary>
+        /// <param name="oImplicit">Object producing a signed distance field</param>
+        public Voxels(  in IBoundedImplicit xImplicit) : this()
+        {
+            RenderImplicit(xImplicit, xImplicit.oBounds);
         }
 
         /// <summary>
@@ -323,6 +347,17 @@ namespace PicoGK
         public static Voxels operator &(Voxels voxA, Voxels voxB)
         {
             return voxA.voxBoolIntersect(voxB);
+        }
+
+        /// <summary>
+        /// Intersects the voxel field with the specified bounding box
+        /// so all voxels outside the box are trimmed away
+        /// </summary>
+        /// <param name="oBox"></param>
+        public void Trim(BBox3 oBox)
+        {
+            Voxels voxTrim = new(Utils.mshCreateCube(oBox));
+            BoolIntersect(voxTrim);
         }
 
         /// <summary>
@@ -684,16 +719,13 @@ namespace PicoGK
         }
 
         /// <summary>
-        /// Uses the CalculateProperties function to calculate the
-        /// bounding box of the voxel field and returns it.
+        /// Calculates the bounding box from an intermediate mesh generated from the voxels
         /// </summary>
         /// <returns>Bounding box of the voxels in real world coordinates</returns>
         public BBox3 oCalculateBoundingBox()
         {
-            CalculateProperties(    out float _,
-                                    out BBox3 oBox);
-
-            return oBox;                
+            Mesh msh = new(this);
+            return msh.oBoundingBox();  
         }
 
         /// <summary>
@@ -845,6 +877,34 @@ namespace PicoGK
                                     ref nXSize,
                                     ref nYSize,
                                     ref nZSize);
+        }
+
+         /// <summary>
+        /// Query the real world origin of a voxel slice, which is also
+        /// the origin of the actual voxel field in space
+        /// </summary>
+        /// <param name="nZSlice">Slice you are looking for</param>
+        /// <returns>Real world coordinates of the origin of the slice</returns>
+        public Vector3 vecZSliceOrigin(int nZSlice=0)
+        {
+            GetVoxelDimensions( out int nXOrigin,
+                                out int nYOrigin,
+                                out int nZOrigin,
+                                out _,
+                                out _,
+                                out _);
+
+            return Library.vecVoxelsToMm(nXOrigin, nYOrigin, nZOrigin + nZSlice);
+        }
+
+        /// <summary>
+        /// Return the number of slices in this voxel field
+        /// </summary>
+        /// <returns>Number of slices in the voxel field (equivalent to nZSice)</returns>
+        public int nSliceCount()
+        {
+            GetVoxelDimensions(out _, out _, out int nCount);
+            return nCount;
         }
 
         public enum ESliceMode

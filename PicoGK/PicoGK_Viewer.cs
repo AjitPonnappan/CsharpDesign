@@ -6,7 +6,7 @@
 //
 // For more information, please visit https://picogk.org
 // 
-// PicoGK is developed and maintained by LEAP 71 - © 2023-2024 by LEAP 71
+// PicoGK is developed and maintained by LEAP 71 - © 2023-2025 by LEAP 71
 // https://leap71.com
 //
 // Computational Engineering will profoundly change our physical world in the
@@ -155,7 +155,12 @@ namespace PicoGK
 
         public void LoadLightSetup(string strFilePath)
         {
-            using (ZipArchive oZip = ZipFile.OpenRead(strFilePath))
+            LoadLightSetup(File.OpenRead(strFilePath));
+        }
+
+        public void LoadLightSetup(Stream oStream)
+        {
+            using (ZipArchive oZip = new(oStream, ZipArchiveMode.Read))
             {
                 // Find the entry for the diffTexture
                 ZipArchiveEntry? oDiffuseEntry = oZip.GetEntry("Diffuse.dds");

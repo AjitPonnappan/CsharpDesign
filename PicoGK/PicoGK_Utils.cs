@@ -6,7 +6,7 @@
 //
 // For more information, please visit https://picogk.org
 // 
-// PicoGK is developed and maintained by LEAP 71 - © 2023-2024 by LEAP 71
+// PicoGK is developed and maintained by LEAP 71 - © 2023-2025 by LEAP 71
 // https://leap71.com
 //
 // Computational Engineering will profoundly change our physical world in the
@@ -149,7 +149,7 @@ namespace PicoGK
         /// <returns>The assumed path to the source code root</returns>
         static public string strProjectRootFolder()
         {
-            string strPath = strStripQuotesFromPath(Environment.CommandLine);
+            string strPath = AppContext.BaseDirectory;
 
             for (int n = 0; n < 4; n++)
             {

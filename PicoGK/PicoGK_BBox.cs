@@ -6,7 +6,7 @@
 //
 // For more information, please visit https://picogk.org
 // 
-// PicoGK is developed and maintained by LEAP 71 - © 2023-2024 by LEAP 71
+// PicoGK is developed and maintained by LEAP 71 - © 2023-2025 by LEAP 71
 // https://leap71.com
 //
 // Computational Engineering will profoundly change our physical world in the
@@ -107,11 +107,33 @@ namespace PicoGK
         }
 
         /// <summary>
+        /// Checks whether point is inside the bounding box
+        /// </summary>
+        public bool bContains(Vector2 vec)
+        {
+            if (bIsEmpty())
+                return false;
+
+            if (    (vec.X < vecMin.X) ||
+                    (vec.Y < vecMin.Y) ||
+                    (vec.X > vecMax.X) ||
+                    (vec.Y > vecMax.Y))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Include the specified vector in the bounding box
         /// </summary>
         /// <param name="vec">Vector to include</param>
         public void Include(Vector2 vec)
         {
+            Debug.Assert(!float.IsNaN(vec.X));
+            Debug.Assert(!float.IsNaN(vec.Y));
+
             vecMin.X = Math.Min(vecMin.X, vec.X);
             vecMin.Y = Math.Min(vecMin.Y, vec.Y);
             vecMax.X = Math.Max(vecMax.X, vec.X);
@@ -175,11 +197,11 @@ namespace PicoGK
         /// <returns></returns>
         public override string ToString()
         {
-            return "<Min: " + vecMin.ToString() + " | Max: " + vecMax.ToString() + ">";
+            return $"<Min: {vecMin} | Max: {vecMax}>";
         }
 
-        public Vector2 vecMin;
-        public Vector2 vecMax;
+        public Vector2 vecMin   = new();
+        public Vector2 vecMax   = new();
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -263,6 +285,27 @@ namespace PicoGK
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Checks whether the specified point is inside the bounding box
+        /// </summary>
+        public bool bContains(Vector3 vec)
+        {
+            if (bIsEmpty())
+                return false;
+
+            if (    (vec.X < vecMin.X) ||
+                    (vec.Y < vecMin.Y) ||
+                    (vec.Z < vecMin.Z) ||
+                    (vec.X > vecMax.X) ||
+                    (vec.Y > vecMax.Y) ||
+                    (vec.Z > vecMax.Z))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -385,9 +428,10 @@ namespace PicoGK
         /// <returns>A random vector inside of this Bounding Box</returns>
         public Vector3 vecRandomVectorInside(ref Random oRand)
         {
-            return new Vector3( oRand.NextSingle() * vecSize().X + vecMin.X,
-                                oRand.NextSingle() * vecSize().Y + vecMin.Y,
-                                oRand.NextSingle() * vecSize().Z + vecMin.Z);
+            return new Vector3( vecMin.X + oRand.NextSingle() * (vecMax.X - vecMin.X),
+                                vecMin.Y + oRand.NextSingle() * (vecMax.Y - vecMin.Y),
+                                vecMin.Z + oRand.NextSingle() * (vecMax.Z - vecMin.Z));
+
         }
 
         /// <summary>
@@ -396,10 +440,8 @@ namespace PicoGK
         /// <returns>A 2D Bounding Box with the X/Y extent of this Bounding Box</returns>
         public BBox2 oAsBoundingBox2()
         {
-            BBox2 oBB2 = new();
-            oBB2.Include(new Vector2(vecMin.X, vecMin.Y));
-            oBB2.Include(new Vector2(vecMax.X, vecMax.Y));
-            return oBB2;
+            return new BBox2(   vecMin.X, vecMin.Y, 
+                                vecMax.X, vecMax.Y);
         }
 
         /// <summary>
@@ -408,10 +450,10 @@ namespace PicoGK
         /// <returns>String with the extent of the box</returns>
         public override string ToString()
         {
-            return "<Min: " + vecMin.ToString() + " | Max: " + vecMax.ToString() + ">";
+            return $"<Min: {vecMin} | Max: {vecMax}>";
         }
 
-        public Vector3 vecMin;
-        public Vector3 vecMax;
+        public Vector3 vecMin   = new();
+        public Vector3 vecMax   = new();
     }
 }

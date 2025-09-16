@@ -6,7 +6,7 @@
 //
 // For more information, please visit https://picogk.org
 // 
-// PicoGK is developed and maintained by LEAP 71 - © 2023-2024 by LEAP 71
+// PicoGK is developed and maintained by LEAP 71 - © 2023-2025 by LEAP 71
 // https://leap71.com
 //
 // Computational Engineering will profoundly change our physical world in the
@@ -149,6 +149,20 @@ namespace PicoGK
             return _nAddVertex(m_hThis, vec);
         }
 
+        public void AddVertices(    in  IEnumerable<Vector3> avecVertices,
+                                    out int[] anVertexIndex)
+        {
+            int nVertexCount = avecVertices.Count();
+            anVertexIndex = new int[nVertexCount];
+            
+            int n=0;
+            foreach (Vector3 vec in avecVertices)
+            {
+                anVertexIndex[n] = nAddVertex(vec);
+                n++;
+            }
+        }
+
         /// <summary>
         /// Get the vertex at the specified index
         /// </summary>
@@ -217,6 +231,48 @@ namespace PicoGK
             int B = nAddVertex(vecB);
             int C = nAddVertex(vecC);
             return nAddTriangle(new Triangle(A, B, C));
+        }
+
+        /// <summary>
+        /// Adds a quad, defined by four corner vertices
+        /// Helper function, which calls nAddTriangle in
+        /// the background.
+        /// </summary>
+        public void AddQuad(    int n0,
+                                int n1,
+                                int n2,
+                                int n3,
+                                bool bFlipped = false)
+        {
+            if (bFlipped)
+            {
+                nAddTriangle(n0, n2, n1);
+                nAddTriangle(n0, n3, n2);
+            }
+            else
+            {
+                nAddTriangle(n0, n1, n2);
+                nAddTriangle(n0, n2, n3);
+            }
+        }
+
+        /// <summary>
+        /// Adds a quad, defined by four corner vertices
+        /// Helper function, which calls nAddTriangle in
+        /// the background.
+        /// </summary>
+        public void AddQuad(    in Vector3 vec0,
+                                in Vector3 vec1,
+                                in Vector3 vec2,
+                                in Vector3 vec3,
+                                bool bFlipped = false)
+        {
+            int n0 = nAddVertex(vec0);
+            int n1 = nAddVertex(vec1);
+            int n2 = nAddVertex(vec2);
+            int n3 = nAddVertex(vec3);
+
+            AddQuad(n0,n1,n2,n3, bFlipped);
         }
 
         /// <summary>

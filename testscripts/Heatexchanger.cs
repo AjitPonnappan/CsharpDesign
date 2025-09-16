@@ -48,6 +48,11 @@ namespace HeatExchanger
             BBox3 m_oBox = new(new(0, 0, 0), new(m_fLength, m_fWidth, m_fHeight));
             return m_oBox;
         }
+        public BBox3 ShellBoxCut()
+        {
+            BBox3 m_oBox = new(new(m_fLength, m_fWidth, m_fHeight), new(100, 100, 100));
+            return m_oBox;
+        }
 
         float m_fLength;
         float m_fWidth;
@@ -92,7 +97,6 @@ namespace HeatExchanger
             Voxels voxShell = voxOutbox - voxInbox;
 
             //Add Inlet and outlet to shell
-
             tube inlet1 = new(new Vector3(0, 10, 20), new Vector3(-10, 10, 20), 4);
             Voxels voxInletID = new(inlet1.createTube());
             Voxels voxInletOD = voxInletID.voxOffset(2);
@@ -103,9 +107,16 @@ namespace HeatExchanger
             voxInbox.IntersectImplicit(oGyroid);
             Voxels VoxExchanger = voxShell + voxInbox + voxInlet;
 
+            //Create a cross section
+            ExchangerShell oSize2 = new(-10, 25, -10);
+            Mesh meshbox2 = Utils.mshCreateCube(oSize2.ShellBoxCut());
+            Voxels voxBoolsubtract = new(meshbox2);
+
+            Voxels CrossSection = VoxExchanger - voxBoolsubtract;//Bool subtract to view cross section
+
             //Visualization
             //Library.oViewer().SetGroupMaterial(1, "fb96FF33", 0.9f, 0.2f);
-            Library.oViewer().Add(VoxExchanger, 1);
+            Library.oViewer().Add(CrossSection, 1);
         }
     }
 }
